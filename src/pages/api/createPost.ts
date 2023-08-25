@@ -27,7 +27,7 @@ export default async function handler(
                 const data = await prisma.post.create({
                     data:{
                         title: post.title,
-                        content: post.content,
+                        description: post.content,
                         userId: prismaUser.id
                     },
                 })
