@@ -45,7 +45,7 @@ export default async function Home() {
           <p className="text-gray-600">{session?.user?.email}</p>
         </div>
       )}
-      {session && <Form />}
+      {session && <Form session={session} />}
       <h1 className="text-4xl text-white mb-4">Public Posts</h1>
       <div className="rounded-lg relative overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
-export default function Form() {
+interface Form {
+  session: Session | null;
+}
+
+const Form: FC<Form> = ({ session }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const router = useRouter();
@@ -12,9 +17,10 @@ export default function Form() {
     if (!title.length) {
       return;
     }
+    let userEmail = session?.user?.email;
     const data = await fetch("/api/createPost", {
       method: "POST",
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content, userEmail }),
     });
     const res = await data.json();
     router.refresh();
@@ -25,6 +31,9 @@ export default function Form() {
   return (
     <form onSubmit={submitPost} className="my-8">
       <h1 className="text-4xl text-white mb-4">Create Post</h1>
+      <h1 className="text-lg text-gray-600 mb-4">
+        Username: {session?.user?.name}
+      </h1>
       <div className="mb-6">
         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Title
@@ -57,4 +66,6 @@ export default function Form() {
       </button>
     </form>
   );
-}
+};
+
+export default Form;

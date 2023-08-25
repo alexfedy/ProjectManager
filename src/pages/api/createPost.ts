@@ -4,6 +4,7 @@ import prisma from "../../../prisma/client";
 type postProps = {
     title: string,
     content: string
+    userEmail: string
 }
 
 export default async function handler(
@@ -11,16 +12,23 @@ export default async function handler(
     res: NextApiResponse
 ){
     try{
-        const post: postProps = JSON.parse(req.body)
+        const post: postProps = JSON.parse(req.body);
         if(req.method === 'POST'){
             if(!post.title.length){
-            return res.status(500).json({message: 'please do not leave this empty'})
-        }
+                return res.status(500).json({message: 'please do not leave this empty'})
+            }
+            const prismaUser = await prisma.user.findUnique({
+                where: {email: post.userEmail},
+            });
+            if(!prismaUser){
+                return res.status(401).json({message: "Unauthorized"});
+            }
             try{
                 const data = await prisma.post.create({
                     data:{
                         title: post.title,
-                        content: post.content
+                        content: post.content,
+                        userId: prismaUser.id
                     },
                 })
                 res.status(200).json(data)
