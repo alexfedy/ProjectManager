@@ -6,14 +6,6 @@ import { User } from "@prisma/client";
 
 export const revalidate = 0;
 
-async function getPosts() {
-  const res = await fetch(`${process.env.BASE_URL}/api/getPosts`);
-  if (!res.ok) {
-    console.log(res);
-  }
-  return res.json();
-}
-
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
@@ -23,6 +15,16 @@ export default async function Home() {
     createdAt: Date;
     user: User;
   }[] = await getPosts();
+
+  async function getPosts() {
+    let userEmail = session?.user?.email;
+    const data = await fetch(`${process.env.BASE_URL}/api/getAccountPosts`, {
+      method: "POST",
+      body: JSON.stringify({ userEmail }),
+    });
+    const res = await data.json();
+    return res;
+  }
 
   return (
     <main className="mx-auto p-8 w-full max-w-5xl">
@@ -48,12 +50,12 @@ export default async function Home() {
         </div>
       )}
       {session && (
-        <a href="/account" className="text-white my-4 underline border-white">
-          View Account
+        <a href="/" className="text-white underline my-4">
+          Back to Home Page
         </a>
       )}
       {session && <Form session={session} />}
-      <h1 className="text-4xl text-white mb-4">Public Posts</h1>
+      <h1 className="text-4xl text-white mb-4">Your Posts</h1>
       <Table data={data} />
     </main>
   );
