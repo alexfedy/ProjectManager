@@ -20,8 +20,8 @@ interface TableProps {
 const Table: React.FC<TableProps> = ({ data }) => (
   <>
     <div className="rounded-lg relative overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-500">
+        <thead className="text-xs text-gray-500 uppercase bg-black/20">
           <tr>
             <th scope="col" className="px-6 py-3">
               Title
@@ -40,14 +40,11 @@ const Table: React.FC<TableProps> = ({ data }) => (
         <tbody>
           {data.length > 0 && (
             <>
-              {data?.map((post) => (
-                <tr
-                  key={post.user.id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                >
+              {data?.map((post, i) => (
+                <tr key={i} className="bg-white/10 border-b text-gray-300">
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-6 py-4 font-medium whitespace-nowrap"
                   >
                     {post.title}
                   </th>
