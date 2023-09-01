@@ -53,7 +53,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  posts         Post[]
+  posts         Project[]
 }
 
 model VerificationToken {
@@ -64,10 +64,11 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Post {
+model Project {
   id            Int      @id @default(autoincrement())
   title         String
   description   String?
+  link          String?
   totalLikes    Int      @default(0)
   totalComments Int      @default(0)
   createdAt     DateTime @default(now())

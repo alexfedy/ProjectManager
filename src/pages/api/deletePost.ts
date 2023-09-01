@@ -2,10 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../prisma/client";
 
 type postProps = {
-    title: string,
-    content: string,
-    link: string,
-    userEmail: string
+    userEmail: string;
+    id: number;
 }
 
 export default async function handler(
@@ -15,9 +13,6 @@ export default async function handler(
     try{
         const post: postProps = JSON.parse(req.body);
         if(req.method === 'POST'){
-            if(!post.title.length){
-                return res.status(500).json({message: 'please do not leave this empty'})
-            }
             const prismaUser = await prisma.user.findUnique({
                 where: {email: post.userEmail},
             });
@@ -25,17 +20,14 @@ export default async function handler(
                 return res.status(401).json({message: "Unauthorized"});
             }
             try{
-                const data = await prisma.project.create({
-                    data:{
-                        title: post.title,
-                        description: post.content,
-                        link: post.link,
-                        userId: prismaUser.id
+                const data = await prisma.project.delete({
+                    where:{
+                        id: post.id
                     },
                 })
                 res.status(200).json(data)
             }catch(error){
-                return res.status(500).json({message: "Error creating a new post"})
+                return res.status(500).json({message: "Error deleting the project."})
             }
         }
     }

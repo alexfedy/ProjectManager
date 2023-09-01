@@ -19,7 +19,7 @@ export default async function handler(
                 return res.status(401).json({message: "Unauthorized"});
             }
             try{
-                const data = await prisma.post.findMany({
+                const data = await prisma.project.findMany({
                     where: {userId: prismaUser.id},
                     orderBy: {
                         createdAt: 'desc',
